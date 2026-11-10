@@ -67,12 +67,12 @@ public class StatisticsService : IStatisticsService
 
             TopVacation = vacations
                 .GroupBy(l => l.EmployeeId)
-                .Select(g => new VacationStat
-                {
-                    EmployeeId = g.Key,
-                    Name = g.First().Employee!.FullName,
-                    Days = g.Sum(l => l.Days)
-                })
+                 .Select(g => new VacationStat
+         {
+            EmployeeId = g.Key,
+            Name = g.First().Employee!.FullName,
+            Days = g.Sum(l => (l.EndDate - l.StartDate).Days + 1) 
+    })
                 .OrderByDescending(v => v.Days)
                 .Take(5)
                 .ToList()

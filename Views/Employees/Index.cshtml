@@ -1,3 +1,4 @@
+@page
 @model List<Employee>
 @{
     ViewData["Title"] = "Pracownicy";
@@ -80,7 +81,7 @@
 </div>
 
 <div class="d-flex justify-content-between align-items-center mt-3">
-    <span class="text-muted">Strona @page z @totalPages · wyników: @ViewBag.Total</span>
+    <span class="text-muted">Strona @(page) z @totalPages · wyników: @ViewBag.Total</span>
     <div class="d-flex gap-2">
         <a asp-action="Index" asp-route-page="@(page - 1)" asp-route-sortOrder="@ViewBag.SortOrder"
            asp-route-searchString="@ViewBag.SearchString" asp-route-departmentId="@ViewBag.DepartmentId"
