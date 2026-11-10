@@ -1,0 +1,16 @@
+@model Employee
+@{
+    ViewData["Title"] = "Edycja: " + Model.FullName;
+}
+
+<h1 class="h3 mb-3">Edycja pracownika</h1>
+
+<div class="card">
+    <div class="card-body">
+        <form asp-action="Edit" asp-route-id="@Model.Id">
+            <partial name="_Form" />
+            <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Anuluj</a>
+        </form>
+    </div>
+</div>

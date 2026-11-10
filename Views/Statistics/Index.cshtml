@@ -1,0 +1,76 @@
+@model List<Department>
+@{
+    ViewData["Title"] = "Statystyki";
+    var byYear = (Dictionary<int, int>)ViewBag.ByYear;
+    var maxInDept = Model.Any() ? Model.Max(d => d.Employees.Count(e => e.IsActive)) : 0;
+}
+
+<h1 class="h3 mb-3">Statystyki</h1>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4"><div class="card text-center"><div class="card-body">
+        <div class="h3 mb-0">@ViewBag.ActiveCount <span class="text-muted fs-6">z @ViewBag.Total</span></div>
+        <div class="text-muted">Aktywni pracownicy</div>
+    </div></div></div>
+    <div class="col-md-4"><div class="card text-center"><div class="card-body">
+        <div class="h3 mb-0">@(((decimal)ViewBag.Payroll).ToString("N2")) zł</div>
+        <div class="text-muted">Miesięczny fundusz płac</div>
+    </div></div></div>
+    <div class="col-md-4"><div class="card text-center"><div class="card-body">
+        <div class="h3 mb-0">@(((decimal)ViewBag.Average).ToString("N2")) zł</div>
+        <div class="text-muted">Średnie wynagrodzenie</div>
+    </div></div></div>
+</div>
+
+<h2 class="h5">Pracownicy według działów</h2>
+<div class="table-responsive bg-white border rounded mb-4">
+    <table class="table align-middle mb-0">
+        <thead class="table-light">
+            <tr><th>Dział</th><th style="width:35%">Liczba pracowników</th><th class="text-end">Średnia pensja</th><th class="text-end">Fundusz płac</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model)
+            {
+                var active = d.Employees.Where(e => e.IsActive).ToList();
+                var avg = active.Any() ? active.Average(e => e.Salary) : 0m;
+                var percent = maxInDept == 0 ? 0 : 100 * active.Count / maxInDept;
+                <tr>
+                    <td><a asp-controller="Departments" asp-action="Details" asp-route-id="@d.Id" class="text-decoration-none">@d.Name</a></td>
+                    <td>
+                        <div class="d-flex align-items-center gap-2">
+                            <div class="progress flex-grow-1" style="height: 10px;">
+                                <div class="progress-bar" style="width: @percent%"></div>
+                            </div>
+                            <span>@active.Count</span>
+                        </div>
+                    </td>
+                    <td class="text-end">@avg.ToString("N2") zł</td>
+                    <td class="text-end">@active.Sum(e => e.Salary).ToString("N2") zł</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <h2 class="h5">Zatrudnienia według roku</h2>
+        <ul class="list-group">
+            @foreach (var item in byYear)
+            {
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>@item.Key</span>
+                    <span class="fw-semibold">@item.Value</span>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h2 class="h5">Wnioski urlopowe według statusu</h2>
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between"><span>Oczekujące</span><span class="fw-semibold">@ViewBag.Pending</span></li>
+            <li class="list-group-item d-flex justify-content-between"><span>Zatwierdzone</span><span class="fw-semibold">@ViewBag.Approved</span></li>
+            <li class="list-group-item d-flex justify-content-between"><span>Odrzucone</span><span class="fw-semibold">@ViewBag.Rejected</span></li>
+        </ul>
+    </div>
+</div>

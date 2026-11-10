@@ -1,0 +1,16 @@
+@model Employee
+@{
+    ViewData["Title"] = "Usuwanie pracownika";
+}
+
+<h1 class="h3 mb-3">Usuwanie pracownika</h1>
+
+<div class="alert alert-danger">
+    Czy na pewno chcesz usunąć pracownika <strong>@Model.FullName</strong>
+    (@Model.Department?.Name, @Model.Position?.Title)? Zostaną usunięte także jego wnioski urlopowe.
+</div>
+
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    <button type="submit" class="btn btn-danger">Usuń</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Anuluj</a>
+</form>

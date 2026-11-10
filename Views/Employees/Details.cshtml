@@ -1,0 +1,64 @@
+@model Employee
+@{
+    ViewData["Title"] = Model.FullName;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">@Model.FullName @if (!Model.IsActive) { <span class="badge bg-secondary">nieaktywny</span> }</h1>
+    <div class="d-flex gap-2">
+        <a asp-controller="Leaves" asp-action="Create" asp-route-employeeId="@Model.Id" class="btn btn-outline-success">Złóż wniosek urlopowy</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-primary">Edytuj</a>
+        <a asp-action="Index" class="btn btn-outline-secondary">Wróć do listy</a>
+    </div>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Email)</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Phone)</dt>
+            <dd class="col-sm-9">@(Model.Phone ?? "—")</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.DepartmentId)</dt>
+            <dd class="col-sm-9">
+                <a asp-controller="Departments" asp-action="Details" asp-route-id="@Model.DepartmentId">@Model.Department?.Name</a>
+            </dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.PositionId)</dt>
+            <dd class="col-sm-9">@Model.Position?.Title</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.HireDate)</dt>
+            <dd class="col-sm-9">@Model.HireDate.ToString("dd.MM.yyyy")</dd>
+
+            <dt class="col-sm-3">@Html.DisplayNameFor(m => m.Salary)</dt>
+            <dd class="col-sm-9">@Model.Salary.ToString("N2") zł</dd>
+        </dl>
+    </div>
+</div>
+
+<h2 class="h5">Wnioski urlopowe</h2>
+<div class="table-responsive bg-white border rounded">
+    <table class="table mb-0 align-middle">
+        <thead class="table-light">
+            <tr><th>Rodzaj</th><th>Od</th><th>Do</th><th>Status</th><th>Uwagi</th></tr>
+        </thead>
+        <tbody>
+            @if (!Model.Leaves.Any())
+            {
+                <tr><td colspan="5" class="text-center text-muted py-3">Brak wniosków.</td></tr>
+            }
+            @foreach (var l in Model.Leaves.OrderByDescending(x => x.StartDate))
+            {
+                <tr>
+                    <td>@Html.DisplayFor(m => l.Type)</td>
+                    <td>@l.StartDate.ToString("dd.MM.yyyy")</td>
+                    <td>@l.EndDate.ToString("dd.MM.yyyy")</td>
+                    <td>@Html.DisplayFor(m => l.Status)</td>
+                    <td>@l.Comment</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

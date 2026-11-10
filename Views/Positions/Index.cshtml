@@ -1,0 +1,39 @@
+@model List<Position>
+@{
+    ViewData["Title"] = "Stanowiska";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Stanowiska</h1>
+    <a asp-action="Create" class="btn btn-primary">Dodaj stanowisko</a>
+</div>
+
+<div class="table-responsive bg-white border rounded">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr><th>Stanowisko</th><th class="text-end">Widełki płacowe</th><th class="text-end">Pracownicy</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>
+                        <div class="fw-semibold">@p.Title</div>
+                        <div class="small">
+                            @foreach (var e in p.Employees.OrderBy(x => x.LastName).Take(3))
+                            {
+                                <a asp-controller="Employees" asp-action="Details" asp-route-id="@e.Id" class="me-2">@e.FullName</a>
+                            }
+                            @if (p.Employees.Count > 3)
+                            {
+                                <span class="text-muted">… +@(p.Employees.Count - 3)</span>
+                            }
+                        </div>
+                    </td>
+                    <td class="text-end">@p.MinSalary.ToString("N0") – @p.MaxSalary.ToString("N0") zł</td>
+                    <td class="text-end">@p.Employees.Count</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "HRSystem": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:57322;http://localhost:57323"
+    }
+  }
+}

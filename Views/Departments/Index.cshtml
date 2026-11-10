@@ -1,0 +1,31 @@
+@model List<Department>
+@{
+    ViewData["Title"] = "Działy";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Działy</h1>
+    <a asp-action="Create" class="btn btn-primary">Dodaj dział</a>
+</div>
+
+<div class="table-responsive bg-white border rounded">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr><th>Nazwa</th><th>Lokalizacja</th><th class="text-end">Pracownicy</th><th></th></tr>
+        </thead>
+        <tbody>
+            @foreach (var d in Model)
+            {
+                <tr>
+                    <td><a asp-action="Details" asp-route-id="@d.Id" class="fw-semibold text-decoration-none">@d.Name</a></td>
+                    <td>@d.Location</td>
+                    <td class="text-end">@d.Employees.Count</td>
+                    <td class="text-end">
+                        <a asp-action="Details" asp-route-id="@d.Id" class="btn btn-sm btn-outline-secondary">Szczegóły</a>
+                        <a asp-action="Edit" asp-route-id="@d.Id" class="btn btn-sm btn-outline-primary">Edytuj</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

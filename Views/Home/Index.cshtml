@@ -1,0 +1,52 @@
+@model List<Employee>
+@{
+    ViewData["Title"] = "Start";
+}
+
+<div class="p-4 mb-4 bg-white border rounded">
+    <h1 class="h3">System zarządzania pracownikami</h1>
+    <p class="text-muted mb-0">Ewidencja pracowników, działów i stanowisk oraz obsługa wniosków urlopowych.</p>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <a class="text-decoration-none" asp-controller="Employees" asp-action="Index">
+            <div class="card text-center h-100"><div class="card-body">
+                <div class="display-6">@ViewBag.EmployeeCount</div>
+                <div class="text-muted">Aktywni pracownicy</div>
+            </div></div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a class="text-decoration-none" asp-controller="Departments" asp-action="Index">
+            <div class="card text-center h-100"><div class="card-body">
+                <div class="display-6">@ViewBag.DepartmentCount</div>
+                <div class="text-muted">Działy</div>
+            </div></div>
+        </a>
+    </div>
+    <div class="col-md-4">
+        <a class="text-decoration-none" asp-controller="Leaves" asp-action="Index" asp-route-status="Pending">
+            <div class="card text-center h-100"><div class="card-body">
+                <div class="display-6">@ViewBag.PendingLeaves</div>
+                <div class="text-muted">Wnioski do rozpatrzenia</div>
+            </div></div>
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header bg-white fw-semibold">Ostatnio zatrudnieni</div>
+    <ul class="list-group list-group-flush">
+        @foreach (var e in Model)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>
+                    <a asp-controller="Employees" asp-action="Details" asp-route-id="@e.Id" class="fw-semibold text-decoration-none">@e.FullName</a>
+                    <span class="text-muted">· @e.Position?.Title, @e.Department?.Name</span>
+                </span>
+                <span class="text-muted small">@e.HireDate.ToString("dd.MM.yyyy")</span>
+            </li>
+        }
+    </ul>
+</div>

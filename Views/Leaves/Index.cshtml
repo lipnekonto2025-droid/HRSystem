@@ -1,0 +1,53 @@
+@model List<LeaveRequest>
+@{
+    ViewData["Title"] = "Urlopy";
+    LeaveStatus? current = ViewBag.Status;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Wnioski urlopowe</h1>
+    <a asp-action="Create" class="btn btn-primary">Nowy wniosek</a>
+</div>
+
+<ul class="nav nav-pills mb-3">
+    <li class="nav-item"><a class="nav-link @(current == null ? "active" : "")" asp-action="Index">Wszystkie</a></li>
+    <li class="nav-item"><a class="nav-link @(current == LeaveStatus.Pending ? "active" : "")" asp-action="Index" asp-route-status="Pending">Oczekujące</a></li>
+    <li class="nav-item"><a class="nav-link @(current == LeaveStatus.Approved ? "active" : "")" asp-action="Index" asp-route-status="Approved">Zatwierdzone</a></li>
+    <li class="nav-item"><a class="nav-link @(current == LeaveStatus.Rejected ? "active" : "")" asp-action="Index" asp-route-status="Rejected">Odrzucone</a></li>
+</ul>
+
+<div class="table-responsive bg-white border rounded">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr><th>Pracownik</th><th>Rodzaj</th><th>Od</th><th>Do</th><th>Status</th><th>Uwagi</th><th></th></tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr><td colspan="7" class="text-center text-muted py-4">Brak wniosków.</td></tr>
+            }
+            @foreach (var l in Model)
+            {
+                <tr>
+                    <td><a asp-controller="Employees" asp-action="Details" asp-route-id="@l.EmployeeId" class="text-decoration-none">@l.Employee?.FullName</a></td>
+                    <td>@Html.DisplayFor(m => l.Type)</td>
+                    <td>@l.StartDate.ToString("dd.MM.yyyy")</td>
+                    <td>@l.EndDate.ToString("dd.MM.yyyy")</td>
+                    <td>@Html.DisplayFor(m => l.Status)</td>
+                    <td>@l.Comment</td>
+                    <td class="text-end text-nowrap">
+                        @if (l.Status == LeaveStatus.Pending)
+                        {
+                            <form asp-action="SetStatus" asp-route-id="@l.Id" asp-route-status="Approved" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-success">Zatwierdź</button>
+                            </form>
+                            <form asp-action="SetStatus" asp-route-id="@l.Id" asp-route-status="Rejected" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Odrzuć</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
